@@ -1,6 +1,5 @@
 import { Task, TaskStatus } from "@/types/tasks";
 import TaskList from "./TaskList";
-import { useEffect, useState } from "react";
 import { ScrollArea } from "../ui/scroll-area";
 
 interface TasksProps {
@@ -32,7 +31,7 @@ const Tasks: React.FC<TasksProps> = ({
   };
 
   return (
-    <ScrollArea className="rounded-md h-[70vh]">
+    <ScrollArea className="rounded-md h-full">
       <TaskList
         tasks={filterTasks()}
         onChangeStatusTask={onChangeStatusTask}

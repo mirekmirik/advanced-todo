@@ -3,7 +3,7 @@ import { Task, TaskStatus } from "@/types/tasks";
 
 export const tasksTabStatus = (status: TaskStatus) => {
   const foundStatus = statusesTabs.find((s) => s.value === status);
-  const label = foundStatus?.label || "all";
+  const label = foundStatus?.label || "Усі";
   return label;
 };
 

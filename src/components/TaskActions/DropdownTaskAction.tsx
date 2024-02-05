@@ -39,7 +39,7 @@ const DropdownTaskAction: React.FC<DropdownTaskActionProps> = ({
           }
         >
           {statusesTask.map((status) => (
-            <DropdownMenuRadioItem value={status.value}>
+            <DropdownMenuRadioItem key={status.value} value={status.value}>
               {status.label}
             </DropdownMenuRadioItem>
           ))}

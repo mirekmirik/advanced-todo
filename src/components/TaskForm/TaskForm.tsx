@@ -1,15 +1,17 @@
-import { useTasks } from "@/hooks/useTasks";
-import TaskInput from "./TaskInput";
 import { Task } from "@/types/tasks";
+import TaskInputs from "./TaskInputs";
 
 interface TaskFormProps {
   onAddTask: (task: Task) => void;
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
-  //   const { onAddTask } = useTasks();
 
-  return <TaskInput onAddTask={onAddTask} />;
+  return (
+    <div className="flex flex-col gap-2">
+      <TaskInputs onAddTask={onAddTask} />
+    </div>
+  );
 };
 
 export default TaskForm;

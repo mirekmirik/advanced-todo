@@ -1,51 +1,43 @@
-import { Task } from "@/types/tasks";
-import { Button } from "../ui/button";
 import { Input } from "../ui/input";
-import { useRef } from "react";
-import { useToast } from "../ui/use-toast";
+import { Dispatch, SetStateAction } from "react";
+import { CalendarDays, Tags } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface TaskFormProps {
-  onAddTask: (task: Task) => void;
+  onTitleChange: (title: any) => void;
+  setShowInputTags: Dispatch<SetStateAction<boolean>>;
+  value: string | number;
+  isShowInputTags: boolean;
 }
 
-const TaskInput: React.FC<TaskFormProps> = ({ onAddTask }) => {
-  const { toast } = useToast();
-  const titleRef = useRef<HTMLInputElement>(null);
-
-  const onSubmitTask = () => {
-    if (!titleRef.current?.value.trim()) {
-      return toast({
-        variant: "destructive",
-        title: "Поле не може бути пустим!",
-      });
-    }
-    const newTask: Task = {
-      assignedTo: null,
-      cancelledDate: null,
-      createdAt: new Date(),
-      description: null,
-      dueDate: null,
-      id: Math.random(),
-      priority: null,
-      status: "new",
-      tags: [],
-      title: (titleRef.current?.value as string) || "",
-      updatedAt: null,
-    };
-
-    onAddTask(newTask);
-    toast({
-      title: "Ви додали нове завдання!",
-      variant: "success",
-    });
-  };
-
+const TaskInput: React.FC<TaskFormProps> = ({
+  onTitleChange,
+  setShowInputTags,
+  value,
+  isShowInputTags,
+}) => {
   return (
     <div className="flex w-full items-center space-x-2">
-      <Input type="text" placeholder="Додати задачу..." ref={titleRef} />
-      <Button type="submit" onClick={() => onSubmitTask()}>
-        Додати
-      </Button>
+      <div className="relative w-full">
+        <Input
+          value={value}
+          type="text"
+          placeholder="Додати задачу..."
+          onChange={(e) => onTitleChange(e.target.value)}
+        />
+        <div className="absolute top-2 right-3">
+          <div className="flex gap-2">
+            <CalendarDays />
+            <Tags
+              onClick={() => setShowInputTags((prev) => !prev)}
+              className={cn(
+                "hover:text-purple-500 cursor-pointer transition-300 transition",
+                isShowInputTags ? "text-purple-500" : ""
+              )}
+            />
+          </div>
+        </div>
+      </div>
     </div>
   );
 };
