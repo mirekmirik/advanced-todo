@@ -6,9 +6,8 @@ interface TaskFormProps {
 }
 
 const TaskForm: React.FC<TaskFormProps> = ({ onAddTask }) => {
-
   return (
-    <div className="flex flex-col gap-2">
+    <div className="flex flex-col gap-2 border p-3">
       <TaskInputs onAddTask={onAddTask} />
     </div>
   );

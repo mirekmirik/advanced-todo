@@ -5,7 +5,7 @@ export type Status = {
 
 export const statusesTabs: Status[] = [
   {
-    value: "all",
+    value: "",
     label: "Усі",
   },
   {
@@ -26,6 +26,21 @@ export const statusesTabs: Status[] = [
   },
 ];
 
+export const NAV_TABS: Status[] = [
+  {
+    value: "planned",
+    label: "Запланованно",
+  },
+  {
+    value: "important",
+    label: "Важливо",
+  },
+  {
+    value: "tasks",
+    label: "Задачі",
+  },
+];
+
 export const statusesTask: Status[] = [
   {
     value: "new",
@@ -36,11 +51,13 @@ export const statusesTask: Status[] = [
     label: "Виконанний",
   },
   {
-    value: "in_progress",
-    label: "У процессі",
-  },
-  {
     value: "cancelled",
     label: "Скасованний",
   },
 ];
+
+// export const SIDENAV_ITEMS: Status[] = [
+//   {
+//     label: ''
+//   }
+// ];

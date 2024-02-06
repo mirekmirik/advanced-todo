@@ -7,6 +7,10 @@
 
 export type TaskStatus = "new" | "in_progress" | "completed" | "cancelled";
 
+export type TaskTabs = "planned" | "important" | "all";
+
+export type TaskTabsAndStatus = TaskStatus | TaskTabs;
+
 export enum TaskPriority {
   Low = "low",
   Medium = "medium",
@@ -28,5 +32,7 @@ export interface Task {
   createdAt: Date; // Дата создания задачи
   dueDate: Date | null; // Дата выполнения задачи
   cancelledDate: Date | null;
+  isImportant: boolean;
+  isPlanned: boolean;
   updatedAt: Date | null; // Дата обновления задачи
 }

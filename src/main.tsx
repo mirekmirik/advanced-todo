@@ -21,6 +21,18 @@ const router = createBrowserRouter([
         path: "/tasks/:statusTask",
         element: <TasksPage />,
       },
+      // {
+      //   path: "/tasks/my-day",
+      //   element: <TasksPage />,
+      // },
+      // {
+      //   path: "/tasks/important",
+      //   element: <TasksPage />,
+      // },
+      // {
+      //   path: "/tasks/planned",
+      //   element: <TasksPage />,
+      // },
     ],
   },
 ]);

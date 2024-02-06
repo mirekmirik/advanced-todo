@@ -9,6 +9,7 @@ import { AlertDialogComponent } from "../AlertDialog/AlertDialogComponent";
 import DropdownTaskAction from "../TaskActions/DropdownTaskAction";
 import { statusesTask } from "@/mock/statuses";
 import { Badge } from "../ui/badge";
+import { formatDate } from "@/helpers/format-date";
 
 interface TaskItemProps {
   task: Task;
@@ -100,8 +101,14 @@ const TaskItem: React.FC<TaskItemProps> = ({
           </div>
         </div>
       </div>
+      {/* <div>{formatDate(createdAt)}</div> */}
       <div className="flex items-center gap-5">
-        <StarIcon className="hover:text-yellow-500 transition transition-300" />
+        <StarIcon
+          className={cn(
+            "hover:text-yellow-500 transition transition-300 cursor-pointer",
+            task.isImportant ? "text-yellow-500" : ""
+          )}
+        />
         <DropdownTaskAction
           onChangeStatusTask={onChangeStatusTask}
           task={task}

@@ -2,25 +2,23 @@ import Filters from "@/components/Filters/Filters";
 import TaskForm from "@/components/TaskForm/TaskForm";
 import Tasks from "@/components/Tasks/Tasks";
 import { tasksTabStatus } from "@/helpers/tasks-status";
-import { useTasks } from "@/hooks/useTasks";
-import { TaskStatus } from "@/types/tasks";
+import { TaskStatus, TaskTabsAndStatus } from "@/types/tasks";
 import { useParams } from "react-router-dom";
+import { useContextOutlet } from "../Root";
 
 const TasksPage = () => {
-  const statusTask = useParams().statusTask as TaskStatus;
-  const { onChangeStatusTask, tasks, onAddTask, onRemoveTask } = useTasks();
+  const statusTask = useParams().statusTask as TaskTabsAndStatus;
+  const {
+    tasks: { onAddTask, onChangeStatusTask, onRemoveTask, tasks },
+  } = useContextOutlet();
 
   return (
-    // flex flex-col
     <div className="h-full flex flex-col overflow-hidden">
-      <div className="flex justify-between flex-shrink-0">
-        <h1 className="font-bold text-5xl mb-5 text-left">
-          {tasksTabStatus(statusTask)} задачі
-        </h1>
+      <div className="flex justify-between items-center mb-5 py-2 px-2 border-b border">
+        <h1 className="font-bold text-4xl p-4">{tasksTabStatus(statusTask)}</h1>
         <Filters />
       </div>
-      {/* <div className="flex-1"> */}
-      <div className="flex-grow overflow-y-auto p-4">
+      <div className="flex-grow overflow-y-auto px-4">
         <Tasks
           tasks={tasks}
           onChangeStatusTask={onChangeStatusTask}
@@ -28,7 +26,7 @@ const TasksPage = () => {
           status={statusTask}
         />
       </div>
-      <div className="p-2">
+      <div className="">
         <TaskForm onAddTask={onAddTask} />
       </div>
     </div>

@@ -1,11 +1,18 @@
-"use client";
-
 import * as React from "react";
-
-// import { useMediaQuery } from "@/hooks/use-media-query";
 import { useMediaQuery } from "@react-hook/media-query";
-
 import { Button } from "@/components/ui/button";
+import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
+import { useParams, useSearchParams } from "react-router-dom";
+import { Status, statusesTabs } from "@/mock/statuses";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuRadioGroup,
+  DropdownMenuRadioItem,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../ui/dropdown-menu";
 import {
   Command,
   CommandEmpty,
@@ -13,15 +20,8 @@ import {
   CommandInput,
   CommandItem,
   CommandList,
-} from "@/components/ui/command";
-import { Drawer, DrawerContent, DrawerTrigger } from "@/components/ui/drawer";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
-import { useNavigate, useParams } from "react-router-dom";
-import { Status, statusesTabs } from "@/mock/statuses";
+} from "../ui/command";
+import { cn } from "@/lib/utils";
 
 export function StatusFilter() {
   const { statusTask } = useParams();
@@ -31,26 +31,25 @@ export function StatusFilter() {
     statusesTabs.find((status) => status.value === statusTask) ||
       statusesTabs[0]
   );
-  const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const onChangeStatus = (status: Status) => {
-    setSelectedStatus(status);
-    setOpen(false);
-    navigate(`/tasks/${status.value}`, { replace: true });
+  const onChangeStatus = (status: Status | null) => {
+    if (status) {
+      setSelectedStatus(status);
+      setOpen(false);
+      return setSearchParams({
+        status: status.value,
+      });
+    }
   };
 
   if (isDesktop) {
     return (
-      <Popover open={open} onOpenChange={setOpen}>
-        <PopoverTrigger asChild>
-          <Button variant="outline" className="w-[150px] justify-start">
-            {selectedStatus ? <>{selectedStatus.label}</> : <>+ Set status</>}
-          </Button>
-        </PopoverTrigger>
-        <PopoverContent className="w-[200px] p-0" align="start">
-          <StatusList setOpen={setOpen} setSelectedStatus={onChangeStatus} />
-        </PopoverContent>
-      </Popover>
+      <StatusListDekstop
+        setSelectedStatus={onChangeStatus}
+        value={selectedStatus.value}
+        label={selectedStatus.label}
+      />
     );
   }
 
@@ -63,33 +62,46 @@ export function StatusFilter() {
       </DrawerTrigger>
       <DrawerContent>
         <div className="mt-4 border-t">
-          <StatusList setOpen={setOpen} setSelectedStatus={onChangeStatus} />
+          <StatusListMobile
+            setOpen={setOpen}
+            label={selectedStatus.label}
+            value={selectedStatus.value}
+            setSelectedStatus={onChangeStatus}
+          />
         </div>
       </DrawerContent>
     </Drawer>
   );
 }
 
-function StatusList({
+//Mobile list
+function StatusListMobile({
+  setOpen,
   setSelectedStatus,
+  value,
 }: {
+  value: string;
+  label: string;
   setOpen: (open: boolean) => void;
-  setSelectedStatus: (status: Status) => void;
+  setSelectedStatus: (status: Status | null) => void;
 }) {
   return (
     <Command>
       <CommandInput placeholder="Filter status..." />
       <CommandList>
-        <CommandEmpty>No results found.</CommandEmpty>
+        <CommandEmpty>Не знайдено.</CommandEmpty>
         <CommandGroup>
           {statusesTabs.map((status) => (
             <CommandItem
+              className={cn(value === status.value ? "bg-accent" : "")}
               key={status.value}
               value={status.value}
               onSelect={(value) => {
                 setSelectedStatus(
-                  statusesTabs.find((priority) => priority.value === value)!
+                  statusesTabs.find((priority) => priority.value === value) ||
+                    null
                 );
+                setOpen(false);
               }}
             >
               {status.label}
@@ -100,3 +112,78 @@ function StatusList({
     </Command>
   );
 }
+//Dekstop list
+function StatusListDekstop({
+  setSelectedStatus,
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+  setSelectedStatus: (status: Status | null) => void;
+}) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline">{label}</Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent className="w-56">
+        <DropdownMenuLabel>Фільтрувати по:</DropdownMenuLabel>
+        <DropdownMenuSeparator />
+        <DropdownMenuRadioGroup
+          value={value}
+          onValueChange={(value) =>
+            setSelectedStatus(
+              statusesTabs.find((priority) => priority.value === value) || null
+            )
+          }
+        >
+          {statusesTabs.map((status) => (
+            <DropdownMenuRadioItem key={status.value} value={status.value}>
+              {status.label}
+            </DropdownMenuRadioItem>
+          ))}
+        </DropdownMenuRadioGroup>
+      </DropdownMenuContent>
+    </DropdownMenu>
+    // <Command>
+    //   <CommandInput placeholder="Filter status..." />
+    //   <CommandList>
+    //     <CommandEmpty>Не знайдено</CommandEmpty>
+    //     <CommandGroup>
+    //       {statusesTabs.map((status) => (
+    //         <CommandItem
+    //           key={status.value}
+    //           value={status.value}
+
+    //           onSelect={(value) => {
+    //             setSelectedStatus(
+    //               statusesTabs.find((priority) => priority.value === value)!
+    //             );
+    //           }}
+    //         >
+    //           {status.label}
+    //         </CommandItem>
+    //       ))}
+    //     </CommandGroup>
+    //   </CommandList>
+    // </Command>
+  );
+}
+
+// <Popover open={open} onOpenChange={setOpen}>
+//   <PopoverTrigger asChild>
+//     <Button variant={"outline"} className="w-[150px] justify-start">
+//       {selectedStatus ? <>{selectedStatus.label}</> : <>+ Set status</>}
+//     </Button>
+//     {/* <StatusList
+//      /> */}
+
+//     {/* <Button variant="outline" className="w-[150px] justify-start">
+//       {selectedStatus ? <>{selectedStatus.label}</> : <>+ Set status</>}
+//     </Button> */}
+//   </PopoverTrigger>
+//   <PopoverContent className="w-[200px] p-0" align="start">
+//     <StatusList setOpen={setOpen} setSelectedStatus={onChangeStatus} />
+//   </PopoverContent>
+// </Popover>

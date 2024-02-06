@@ -15,6 +15,7 @@ const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask }) => {
   const [title, setTitle] = useState("");
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState<string[]>([]);
+  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [isShowInputTags, setShowInputTags] = useState(false);
 
   const onSubmitTask = () => {
@@ -29,10 +30,12 @@ const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask }) => {
       cancelledDate: null,
       createdAt: new Date(),
       description: null,
-      dueDate: null,
+      dueDate: dueDate,
       id: Math.random(),
       priority: null,
       status: "new",
+      isImportant: false,
+      isPlanned: !!dueDate,
       tags: tag ? [...tags, ...tag.split(",")] : tags,
       title,
       updatedAt: null,

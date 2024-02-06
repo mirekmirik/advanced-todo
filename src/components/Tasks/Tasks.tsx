@@ -1,11 +1,12 @@
-import { Task, TaskStatus } from "@/types/tasks";
+import { Task, TaskStatus, TaskTabs, TaskTabsAndStatus } from "@/types/tasks";
 import TaskList from "./TaskList";
 import { ScrollArea } from "../ui/scroll-area";
+import { useSearchParams } from "react-router-dom";
 
 interface TasksProps {
   tasks: Task[];
   onChangeStatusTask: (taskId: number, type: TaskStatus) => void;
-  status?: TaskStatus;
+  status?: TaskTabsAndStatus;
   onRemoveTask: (taskId: number) => void;
 }
 
@@ -15,19 +16,25 @@ const Tasks: React.FC<TasksProps> = ({
   onChangeStatusTask,
   onRemoveTask,
 }) => {
+  const [searchParams] = useSearchParams();
+
   const filterTasks = () => {
+    const statusOfTask = searchParams.get("status") as TaskStatus;
+    let filteredTasks = [];
     switch (status) {
-      case "completed":
-        return tasks.filter((task) => task.status === "completed");
-      case "cancelled":
-        return tasks.filter((task) => task.status === "cancelled");
-      case "in_progress":
-        return tasks.filter((task) => task.status === "in_progress");
-      case "new":
-        return tasks.filter((task) => task.status === "new");
+      case "important":
+        filteredTasks = tasks.filter((task) => task.isImportant === true);
+        break;
+      case "planned":
+        filteredTasks = tasks.filter((task) => task.isPlanned === true);
+        break;
       default:
-        return tasks;
+        filteredTasks = tasks;
     }
+    if (statusOfTask) {
+      return filteredTasks.filter((task) => task.status === statusOfTask);
+    }
+    return filteredTasks;
   };
 
   return (
