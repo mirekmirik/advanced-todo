@@ -1,6 +1,6 @@
 import Sidebar from "@/components/Sidebar/Sidebar";
 import { Toaster } from "@/components/ui/toaster";
-import { useTasks } from "@/hooks/useTasks";
+import { TasksActionType, useTasks } from "@/hooks/useTasks";
 import { Task, TaskStatus } from "@/types/tasks";
 import { Outlet, useOutletContext } from "react-router-dom";
 
@@ -8,14 +8,22 @@ type ContextType = {
   user: User | null;
   tasks: {
     tasks: Task[];
-    onChangeStatusTask: (taskId: number, type: TaskStatus) => void;
-    onAddTask: (task: Task) => void;
-    onRemoveTask: (taskId: number) => void;
-  };
+  } & TasksActionType;
 };
 
 export default function Root() {
-  const { tasks, onAddTask, onChangeStatusTask, onRemoveTask } = useTasks();
+  const {
+    tasks,
+    onAddTask,
+    onChangeStatusTask,
+    onRemoveTask,
+    onAddDueCalendar,
+    onToggleImportantTask,
+    onUpLevelTask,
+    onAddNote,
+    onChangeTagsTask,
+    onChangeTitleTask,
+  } = useTasks();
 
   const context: ContextType = {
     tasks: {
@@ -23,6 +31,12 @@ export default function Root() {
       onAddTask,
       onChangeStatusTask,
       onRemoveTask,
+      onAddDueCalendar,
+      onToggleImportantTask,
+      onUpLevelTask,
+      onAddNote,
+      onChangeTagsTask,
+      onChangeTitleTask,
     },
     user: {
       id: 3,

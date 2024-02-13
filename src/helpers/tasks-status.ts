@@ -1,5 +1,5 @@
-import { NAV_TABS, statusesTabs } from "@/mock/statuses";
-import { Task, TaskStatus, TaskTabsAndStatus } from "@/types/tasks";
+import { NAV_TABS } from "@/mock/statuses";
+import {  TaskTabsAndStatus } from "@/types/tasks";
 
 export const tasksTabStatus = (status: TaskTabsAndStatus) => {
   const foundStatus = NAV_TABS.find((s) => s.value === status);

@@ -27,14 +27,14 @@ const Sidebar: React.FC<SidebarProps> = ({ tasks }) => {
         links={[
           {
             title: "Важливо",
-            label: "9",
+            label: String(tasks.filter((task) => task.isImportant).length),
             icon: Star,
             variant: "ghost",
             to: "/tasks/important",
           },
           {
             title: "Запланованно",
-            label: "",
+            label: String(tasks.filter((task) => task.dueDate).length),
             icon: NotebookPen,
             variant: "ghost",
             to: "/tasks/planned",
@@ -46,18 +46,6 @@ const Sidebar: React.FC<SidebarProps> = ({ tasks }) => {
             variant: "ghost",
             to: "/tasks/all",
           },
-          //   {
-          //     title: "Trash",
-          //     label: "",
-          //     icon: Trash2,
-          //     variant: "ghost",
-          //   },
-          //   {
-          //     title: "Archive",
-          //     label: "",
-          //     icon: Archive,
-          //     variant: "ghost",
-          //   },
         ]}
       />
       <Separator />

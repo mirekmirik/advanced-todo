@@ -5,18 +5,19 @@ import { useToast } from "../ui/use-toast";
 import TaskInputTags from "./TaskInputTags";
 import TaskInput from "./TaskInput";
 import { cn } from "@/lib/utils";
+import { TasksActionType } from "@/hooks/useTasks";
 
-interface TaskInputsProps {
-  onAddTask: (task: Task) => void;
+interface TaskInputsProps extends TasksActionType {
+  taskId?: number;
 }
 
-const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask }) => {
+const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask, taskId }) => {
   const { toast } = useToast();
   const [title, setTitle] = useState("");
   const [tag, setTag] = useState("");
   const [tags, setTags] = useState<string[]>([]);
-  const [dueDate, setDueDate] = useState<Date | null>(null);
   const [isShowInputTags, setShowInputTags] = useState(false);
+  const [dueDate, setDueDate] = useState<Date | undefined>();
 
   const onSubmitTask = () => {
     if (!title.trim()) {
@@ -30,26 +31,25 @@ const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask }) => {
       cancelledDate: null,
       createdAt: new Date(),
       description: null,
-      dueDate: dueDate,
+      dueDate: undefined,
       id: Math.random(),
       priority: null,
       status: "new",
       isImportant: false,
-      isPlanned: !!dueDate,
       tags: tag ? [...tags, ...tag.split(",")] : tags,
       title,
       updatedAt: null,
+      subtasks: [],
+      note: "",
     };
-    onAddTask(newTask);
-    toast({
-      title: "Ви додали нове завдання!",
-      variant: "success",
-    });
+
+    onAddTask?.(newTask, taskId);
     setShowInputTags(false);
     setTitle("");
     setTag("");
     setTags([]);
   };
+
 
   return (
     <div className="gap-2 flex flex-col">
@@ -58,6 +58,7 @@ const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask }) => {
         onTitleChange={(title) => setTitle(title)}
         setShowInputTags={setShowInputTags}
         isShowInputTags={isShowInputTags}
+        onChangeDate={(date) => setDueDate(date)}
       />
       <div
         className={cn(
@@ -72,7 +73,7 @@ const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask }) => {
           tags={tags}
         />
       </div>
-      <div className="w-full">
+      <div className="w-full text-center">
         <Button onClick={() => onSubmitTask()} className="w-1/2">
           Додати
         </Button>

@@ -1,46 +1,55 @@
-import { Task, TaskStatus } from "@/types/tasks";
+import { Task } from "@/types/tasks";
 import { Card } from "../ui/card";
 import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
-import { useEffect, useMemo, useState } from "react";
-import { StarIcon, XCircle } from "lucide-react";
+import { MouseEvent, useEffect, useMemo, useState } from "react";
+import { ListChecks, StarIcon, StickyNote, Trash } from "lucide-react";
 import { AlertDialogComponent } from "../AlertDialog/AlertDialogComponent";
 import DropdownTaskAction from "../TaskActions/DropdownTaskAction";
 import { statusesTask } from "@/mock/statuses";
 import { Badge } from "../ui/badge";
-import { formatDate } from "@/helpers/format-date";
+import { TasksActionType } from "@/hooks/useTasks";
 
-interface TaskItemProps {
+interface TaskItemProps extends TasksActionType {
   task: Task;
-  onChangeStatusTask: (taskId: number, type: TaskStatus) => void;
-  onRemoveTask: (taskId: number) => void;
+  pickedTask?: Task | null;
+  onChangeTask?: (task: Task) => void;
 }
 
 const TaskItem: React.FC<TaskItemProps> = ({
   task,
+  pickedTask,
   onChangeStatusTask,
   onRemoveTask,
+  onChangeTask,
+  onToggleImportantTask,
 }) => {
+  const {
+    title,
+    // assignedTo,
+    // cancelledDate,
+    // createdAt,
+    description,
+    // dueDate,
+    id,
+    // priority,
+    status,
+    tags,
+    // updatedAt,
+  } = task;
   const [initialTask, setInitialTask] = useState(false);
+
+  const handleClick = (event: MouseEvent<HTMLDivElement, MouseEvent>) => {
+    event.stopPropagation();
+    if (onChangeTask) {
+      onChangeTask(task);
+    }
+  };
 
   useEffect(() => {
     setInitialTask(true);
   }, []);
-
-  const {
-    title,
-    assignedTo,
-    cancelledDate,
-    createdAt,
-    description,
-    dueDate,
-    id,
-    priority,
-    status,
-    tags,
-    updatedAt,
-  } = task;
 
   const statusName = useMemo(() => {
     const style =
@@ -66,15 +75,22 @@ const TaskItem: React.FC<TaskItemProps> = ({
 
   return (
     <Card
+      onClick={handleClick}
       className={cn(
-        "px-4 py-2 flex justify-between duration-500",
-        initialTask ? "show-animate-block" : "hidden-animate-block"
+        "w-full px-4 py-2 flex justify-between duration-500 hover:dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white cursor-pointer",
+        initialTask ? "show-animate-block" : "hidden-animate-block",
+        pickedTask && pickedTask.id === id
+          ? "dark:bg-muted dark:text-white dark:hover:bg-muted dark:hover:text-white"
+          : ""
       )}
     >
-      <div className="flex items-center gap-5 py-2 px-6">
-        <div className="hover:text-red-500 cursor-pointer">
-          <AlertDialogComponent onSubmit={() => onRemoveTask(task.id)}>
-            <XCircle size={20} />
+      <div className="flex items-center gap-5 py-2">
+        <div
+          className="hover:text-red-500 cursor-pointer"
+          onClick={(e) => e.stopPropagation()}
+        >
+          <AlertDialogComponent onSubmit={() => onRemoveTask?.(task.id)}>
+            <Trash size={20} />
           </AlertDialogComponent>
         </div>
         {statusName}
@@ -82,7 +98,7 @@ const TaskItem: React.FC<TaskItemProps> = ({
           id="terms"
           checked={task.status === "completed"}
           disabled={task.status === "cancelled"}
-          onClick={() => onChangeStatusTask(task.id, "completed")}
+          onClick={() => onChangeStatusTask?.(task.id, "completed")}
         />
         <div
           className={cn(
@@ -93,6 +109,10 @@ const TaskItem: React.FC<TaskItemProps> = ({
           <div className="flex flex-col gap-1">
             <Label htmlFor="terms">{title}</Label>
             <p className="text-sm text-muted-foreground">{description}</p>
+            <div className="flex flex-row gap-3">
+              {task.subtasks.length ? <ListChecks size={18} /> : null}
+              {task.note ? <StickyNote size={18} /> : null}
+            </div>
           </div>
           <div className="flex flex-wrap gap-2 h-full">
             {tags.map((tag, i) => (
@@ -102,8 +122,12 @@ const TaskItem: React.FC<TaskItemProps> = ({
         </div>
       </div>
       {/* <div>{formatDate(createdAt)}</div> */}
-      <div className="flex items-center gap-5">
+      <div
+        className="flex items-center gap-5"
+        onClick={(e) => e.stopPropagation()}
+      >
         <StarIcon
+          onClick={() => onToggleImportantTask?.(task.id)}
           className={cn(
             "hover:text-yellow-500 transition transition-300 cursor-pointer",
             task.isImportant ? "text-yellow-500" : ""

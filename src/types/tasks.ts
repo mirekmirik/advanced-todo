@@ -17,7 +17,7 @@ export enum TaskPriority {
   High = "high",
 }
 
-interface Subtask extends Omit<Task, "subtasks"> {
+export interface Subtask extends Omit<Task, "subtasks" | 'note'> {
   taskId: number;
 }
 
@@ -26,13 +26,14 @@ export interface Task {
   title: string; // Название задачи
   description: string | null; // Описание задачи
   status: TaskStatus; // Статус задачи
+  subtasks: Subtask[];
   priority: TaskPriority | null; // Приоритет задачи
   assignedTo: User | null; // Пользователь, которому назначена задача
   tags: string[]; // Метки задачи
   createdAt: Date; // Дата создания задачи
-  dueDate: Date | null; // Дата выполнения задачи
+  dueDate: Date | undefined; // Дата выполнения задачи
   cancelledDate: Date | null;
   isImportant: boolean;
-  isPlanned: boolean;
   updatedAt: Date | null; // Дата обновления задачи
+  note: string;
 }

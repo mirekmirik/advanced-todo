@@ -1,13 +1,12 @@
-import { Task, TaskStatus, TaskTabs, TaskTabsAndStatus } from "@/types/tasks";
+import { Task, TaskStatus, TaskTabsAndStatus } from "@/types/tasks";
 import TaskList from "./TaskList";
 import { ScrollArea } from "../ui/scroll-area";
 import { useSearchParams } from "react-router-dom";
+import { TasksActionType } from "@/hooks/useTasks";
 
-interface TasksProps {
+interface TasksProps extends TasksActionType {
   tasks: Task[];
-  onChangeStatusTask: (taskId: number, type: TaskStatus) => void;
   status?: TaskTabsAndStatus;
-  onRemoveTask: (taskId: number) => void;
 }
 
 const Tasks: React.FC<TasksProps> = ({
@@ -15,6 +14,12 @@ const Tasks: React.FC<TasksProps> = ({
   tasks,
   onChangeStatusTask,
   onRemoveTask,
+  onAddDueCalendar,
+  onAddTask,
+  onToggleImportantTask,
+  onUpLevelTask,
+  onAddNote,
+  onChangeTagsTask,onChangeTitleTask
 }) => {
   const [searchParams] = useSearchParams();
 
@@ -26,7 +31,7 @@ const Tasks: React.FC<TasksProps> = ({
         filteredTasks = tasks.filter((task) => task.isImportant === true);
         break;
       case "planned":
-        filteredTasks = tasks.filter((task) => task.isPlanned === true);
+        filteredTasks = tasks.filter((task) => task.dueDate);
         break;
       default:
         filteredTasks = tasks;
@@ -43,6 +48,13 @@ const Tasks: React.FC<TasksProps> = ({
         tasks={filterTasks()}
         onChangeStatusTask={onChangeStatusTask}
         onRemoveTask={onRemoveTask}
+        onAddDueCalendar={onAddDueCalendar}
+        onAddTask={onAddTask}
+        onToggleImportantTask={onToggleImportantTask}
+        onUpLevelTask={onUpLevelTask}
+        onAddNote={onAddNote}
+        onChangeTagsTask={onChangeTagsTask}
+        onChangeTitleTask={onChangeTitleTask}
       />
     </ScrollArea>
   );

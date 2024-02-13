@@ -15,26 +15,6 @@ const examples = [
     href: "/examples/dashboard",
     code: "https://github.com/shadcn/ui/tree/main/apps/www/app/examples/dashboard",
   },
-  //   {
-  //     name: "Cards",
-  //     href: "/examples/cards",
-  //     code: "https://github.com/shadcn/ui/tree/main/apps/www/app/examples/cards",
-  //   },
-  //   {
-  //     name: "Playground",
-  //     href: "/examples/playground",
-  //     code: "https://github.com/shadcn/ui/tree/main/apps/www/app/examples/playground",
-  //   },
-  //   {
-  //     name: "Forms",
-  //     href: "/examples/forms",
-  //     code: "https://github.com/shadcn/ui/tree/main/apps/www/app/examples/forms",
-  //   },
-  //   {
-  //     name: "Music",
-  //     href: "/examples/music",
-  //     code: "https://github.com/shadcn/ui/tree/main/apps/www/app/examples/music",
-  //   },
   {
     name: "Повідомлення",
     href: "/examples/mail",

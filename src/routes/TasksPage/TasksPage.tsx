@@ -2,14 +2,25 @@ import Filters from "@/components/Filters/Filters";
 import TaskForm from "@/components/TaskForm/TaskForm";
 import Tasks from "@/components/Tasks/Tasks";
 import { tasksTabStatus } from "@/helpers/tasks-status";
-import { TaskStatus, TaskTabsAndStatus } from "@/types/tasks";
+import { TaskTabsAndStatus } from "@/types/tasks";
 import { useParams } from "react-router-dom";
 import { useContextOutlet } from "../Root";
 
 const TasksPage = () => {
   const statusTask = useParams().statusTask as TaskTabsAndStatus;
   const {
-    tasks: { onAddTask, onChangeStatusTask, onRemoveTask, tasks },
+    tasks: {
+      onAddTask,
+      onChangeStatusTask,
+      onRemoveTask,
+      onAddDueCalendar,
+      onToggleImportantTask,
+      onUpLevelTask,
+      tasks,
+      onAddNote,
+      onChangeTagsTask,
+      onChangeTitleTask,
+    },
   } = useContextOutlet();
 
   return (
@@ -24,11 +35,16 @@ const TasksPage = () => {
           onChangeStatusTask={onChangeStatusTask}
           onRemoveTask={onRemoveTask}
           status={statusTask}
+          onAddDueCalendar={onAddDueCalendar}
+          onAddTask={onAddTask}
+          onToggleImportantTask={onToggleImportantTask}
+          onUpLevelTask={onUpLevelTask}
+          onAddNote={onAddNote}
+          onChangeTagsTask={onChangeTagsTask}
+          onChangeTitleTask={onChangeTitleTask}
         />
       </div>
-      <div className="">
-        <TaskForm onAddTask={onAddTask} />
-      </div>
+      <TaskForm onAddTask={onAddTask} />
     </div>
   );
 };
