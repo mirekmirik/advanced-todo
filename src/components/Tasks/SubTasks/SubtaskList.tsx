@@ -1,7 +1,6 @@
-import { Subtask, TaskStatus } from "@/types/tasks";
+import { Subtask } from "@/types/tasks";
 import SubtaskItem from "./SubtaskItem";
 import { TasksActionType } from "@/hooks/useTasks";
-import { useContextOutlet } from "@/routes/Root";
 
 interface SubtaskListProps extends TasksActionType {
   subtasks: Subtask[];

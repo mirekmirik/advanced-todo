@@ -1,7 +1,5 @@
-import { Task } from "@/types/tasks";
 import TaskInputs from "./TaskInputs";
-import { TasksActionType, useTasks } from "@/hooks/useTasks";
-import { useOutletContext } from "react-router-dom";
+import { TasksActionType } from "@/hooks/useTasks";
 import { useContextOutlet } from "@/routes/Root";
 
 interface TaskFormProps extends TasksActionType {

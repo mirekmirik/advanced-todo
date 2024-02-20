@@ -19,10 +19,6 @@ export function CalendarDateRangePicker({
   setDate,
   date,
 }: CalendarDateRangePickerProps) {
-  // const [date, setDate] = React.useState<DateRange | undefined>({
-  //   from: new Date(),
-  //   to: addDays(new Date(), 20),
-  // });
 
   return (
     <div className={cn("grid gap-2 w-full", className)}>

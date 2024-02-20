@@ -1,9 +1,3 @@
-// export enum TaskStatus {
-//   New = "new",
-//   InProgress = "in_progress",
-//   Completed = "completed",
-//   Cancelled = "cancelled",
-// }
 
 export type TaskStatus = "new" | "in_progress" | "completed" | "cancelled";
 

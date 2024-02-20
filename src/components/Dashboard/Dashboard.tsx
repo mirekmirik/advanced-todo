@@ -1,7 +1,3 @@
-import { MainNav } from "./MainNav";
-import { Search } from "./Search";
-import TeamSwitcher from "./TeamSwitcher";
-import { UserNav } from "./UserNav";
 import { Tabs, TabsContent } from "../ui/tabs";
 import {
   Card,
@@ -51,22 +47,6 @@ export default function Dashboard() {
 
   return (
     <>
-      {/* <div className="md:hidden">
-        <img
-          src="/examples/dashboard-light.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="block dark:hidden"
-        />
-        <img
-          src="/examples/dashboard-dark.png"
-          width={1280}
-          height={866}
-          alt="Dashboard"
-          className="hidden dark:block"
-        />
-      </div> */}
       <div className="flex-col flex overflow-y-auto h-full">
         <div className="flex-1 space-y-4 px-4 py-6">
           <div className="flex items-center flex-col space-y-2 flex-wrap w-full">
@@ -104,9 +84,6 @@ export default function Dashboard() {
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{totalTasks}</div>
-                    {/* <p className="text-xs text-muted-foreground">
-                      +20.1% from last month
-                    </p> */}
                   </CardContent>
                 </Card>
                 <Card>
@@ -133,9 +110,6 @@ export default function Dashboard() {
                     <div className="text-2xl font-bold">
                       {totalDoneTasks.length}
                     </div>
-                    {/* <p className="text-xs text-muted-foreground">
-                      +180.1% from last month
-                    </p> */}
                   </CardContent>
                 </Card>
                 <Card>
@@ -161,9 +135,7 @@ export default function Dashboard() {
                     <div className="text-2xl font-bold">
                       {totalTasksCancelled.length}
                     </div>
-                    {/* <p className="text-xs text-muted-foreground">
-                      +19% from last month
-                    </p> */}
+  
                   </CardContent>
                 </Card>
                 <Card>
@@ -188,9 +160,6 @@ export default function Dashboard() {
                     <div className="text-2xl font-bold">
                       {totalTasksActive.length}
                     </div>
-                    {/* <p className="text-xs text-muted-foreground">
-                      +201 since last hour
-                    </p> */}
                   </CardContent>
                 </Card>
               </div>

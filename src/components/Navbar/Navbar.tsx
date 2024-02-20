@@ -1,4 +1,4 @@
-import { Link, NavLink, useLocation, useParams } from "react-router-dom";
+import { Link,  useLocation} from "react-router-dom";
 import { ScrollArea } from "../ui/scroll-area";
 import { cn } from "@/lib/utils";
 import { ModeToggle } from "../Theme/mode-toggle";
@@ -26,14 +26,6 @@ const examples = [
     code: "https://github.com/shadcn/ui/tree/main/apps/www/app/examples/authentication",
   },
 ];
-
-// className={cn(
-//     "flex h-7 items-center justify-center rounded-full px-4 text-center text-sm transition-colors hover:text-primary",
-//     pathname?.startsWith(example.href) ||
-//       (index === 0 && pathname === "/")
-//       ? "bg-muted font-medium text-primary"
-//       : "text-muted-foreground"
-//   )}
 
 const Navbar = () => {
   const location = useLocation();

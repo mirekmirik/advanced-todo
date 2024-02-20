@@ -1,5 +1,4 @@
-import { Subtask, TaskStatus } from "@/types/tasks";
-import { ScrollArea } from "@/components/ui/scroll-area";
+import { Subtask } from "@/types/tasks";
 import SubtaskList from "./SubtaskList";
 import { TasksActionType } from "@/hooks/useTasks";
 

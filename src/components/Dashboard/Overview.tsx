@@ -1,9 +1,6 @@
-import { Task, TaskStatus } from "@/types/tasks";
-import { getDay } from "date-fns";
+import { Task } from "@/types/tasks";
 import { DateRange } from "react-day-picker";
 import {
-  Bar,
-  BarChart,
   Legend,
   Line,
   LineChart,
@@ -13,56 +10,6 @@ import {
   Tooltip,
 } from "recharts";
 
-const data = [
-  {
-    name: "Jan",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Feb",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Mar",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Apr",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "May",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jun",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Jul",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Aug",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Sep",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Oct",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Nov",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-  {
-    name: "Dec",
-    total: Math.floor(Math.random() * 5000) + 1000,
-  },
-];
 
 const months = [
   "Jan",
@@ -88,7 +35,6 @@ export function Overview({ tasks, date }: OverviewProps) {
 
   const getCompletedTasksByMonth = (
     tasks: Task[],
-    type: TaskStatus = "new"
   ) => {
     const currentYear = new Date().getFullYear();
     const data = months.map((month) => {

@@ -2,15 +2,11 @@ import Sidebar from "@/components/Sidebar/Sidebar";
 import {
   Sheet,
   SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
 import { Toaster } from "@/components/ui/toaster";
 import {
   TasksActionType,
-  onGetTaskLocalStorageItems,
   useTasks,
 } from "@/hooks/useTasks";
 import { Task } from "@/types/tasks";
@@ -26,7 +22,6 @@ type ContextType = {
 
 export default function Root() {
   const tasks = useTasks();
-  // const tasksWithLocalStorage = [...tasks.tasks, ...onGetTaskLocalStorageItems(),];
   const [open, setOpen] = useState(false);
 
   return (

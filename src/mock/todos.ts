@@ -1,4 +1,4 @@
-import { Task, TaskPriority, TaskStatus } from "@/types/tasks";
+import { Task, TaskPriority } from "@/types/tasks";
 
 export const todos: Task[] = [
   {
@@ -45,10 +45,10 @@ export const todos: Task[] = [
     createdAt: new Date(2023, 8, 14),
     dueDate: new Date(2023, 11, 20),
     cancelledDate: null,
-    updatedAt: new Date(2023, 11, 14),
     isImportant: false,
     subtasks: [],
     note: "",
+    completedAt: new Date(2023, 11, 15),
   },
   {
     id: 4,
@@ -60,9 +60,10 @@ export const todos: Task[] = [
     createdAt: new Date(2023, 11, 13),
     dueDate: undefined,
     cancelledDate: null,
-    updatedAt: new Date(2023, 11, 14),
     isImportant: false,
     subtasks: [],
+    completedAt: new Date(2023, 11, 12),
+
     note: "",
   },
   {
@@ -75,8 +76,8 @@ export const todos: Task[] = [
     createdAt: new Date(2023, 11, 13),
     dueDate: undefined,
     cancelledDate: null,
-    updatedAt: new Date(2023, 11, 14),
     isImportant: false,
+    completedAt: new Date(2024, 1, 16),
     subtasks: [],
     note: "",
   },
@@ -90,10 +91,10 @@ export const todos: Task[] = [
     createdAt: new Date(),
     dueDate: undefined,
     cancelledDate: null,
-    updatedAt: new Date(2023, 11, 14),
     isImportant: false,
     subtasks: [],
     note: "",
+    completedAt: new Date(2024, 1, 16),
   },
   {
     id: 12,
@@ -105,7 +106,7 @@ export const todos: Task[] = [
     createdAt: new Date(),
     dueDate: undefined,
     cancelledDate: new Date(2023, 11, 14),
-    updatedAt: new Date(2023, 11, 14),
+    completedAt: new Date(2024, 1, 16),
     isImportant: true,
     note: "",
     subtasks: [
@@ -120,7 +121,7 @@ export const todos: Task[] = [
         createdAt: new Date(2023, 11, 13),
         dueDate: new Date(2023, 11, 14),
         cancelledDate: null,
-        updatedAt: new Date(2023, 11, 14),
+        completedAt: new Date(2024, 1, 16),
         isImportant: false,
       },
       {
@@ -134,7 +135,7 @@ export const todos: Task[] = [
         createdAt: new Date(2023, 11, 13),
         dueDate: new Date(2023, 11, 14),
         cancelledDate: null,
-        updatedAt: new Date(2023, 11, 14),
+        completedAt: new Date(2024, 1, 16),
         isImportant: false,
       },
     ],
@@ -149,7 +150,7 @@ export const todos: Task[] = [
     createdAt: new Date(),
     dueDate: new Date(2023, 11, 20),
     cancelledDate: null,
-    updatedAt: new Date(2023, 11, 14),
+    completedAt: new Date(2024, 1, 16),
     isImportant: false,
     subtasks: [],
     note: "",

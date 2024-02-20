@@ -2,11 +2,9 @@ import { LucideIcon } from "lucide-react";
 
 import { cn } from "@/lib/utils";
 import { buttonVariants } from "../ui/button";
-import { Tooltip, TooltipContent, TooltipTrigger } from "../ui/tooltip";
-import { Link, NavLink } from "react-router-dom";
+import { NavLink } from "react-router-dom";
 
 interface NavProps {
-  //   isCollapsed: boolean;
   links: {
     title: string;
     label?: string;

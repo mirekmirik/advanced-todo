@@ -55,9 +55,3 @@ export const statusesTask: Status[] = [
     label: "Скасованний",
   },
 ];
-
-// export const SIDENAV_ITEMS: Status[] = [
-//   {
-//     label: ''
-//   }
-// ];
