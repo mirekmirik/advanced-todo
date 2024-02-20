@@ -12,18 +12,43 @@ import { Separator } from "../ui/separator";
 import { Nav } from "./Nav";
 import { ModeToggle } from "../Theme/mode-toggle";
 import { Task } from "@/types/tasks";
+import {
+  Sheet,
+  SheetContent,
+  SheetDescription,
+  SheetHeader,
+  SheetTitle,
+  SheetTrigger,
+} from "../ui/sheet";
 
 interface SidebarProps {
   tasks: Task[];
+  onOpenChange?: () => void;
 }
 
-const Sidebar: React.FC<SidebarProps> = ({ tasks }) => {
+const Sidebar: React.FC<SidebarProps> = ({ tasks, onOpenChange }) => {
+  const content = (
+    <Sheet>
+      <SheetTrigger>Open</SheetTrigger>
+      <SheetContent>
+        <SheetHeader>
+          <SheetTitle>Are you absolutely sure?</SheetTitle>
+          <SheetDescription>
+            This action cannot be undone. This will permanently delete your
+            account and remove your data from our servers.
+          </SheetDescription>
+        </SheetHeader>
+      </SheetContent>
+    </Sheet>
+  );
+
   return (
-    <div className="flex flex-col border w-52">
+    <div className="flex flex-col border max-sm:w-full w-52">
       <div className="border">
         <ModeToggle />
       </div>
       <Nav
+        onOpenChange={onOpenChange}
         links={[
           {
             title: "Важливо",
@@ -50,6 +75,7 @@ const Sidebar: React.FC<SidebarProps> = ({ tasks }) => {
       />
       <Separator />
       <Nav
+        onOpenChange={onOpenChange}
         // isCollapsed={isCollapsed}
         links={[
           {
@@ -59,32 +85,6 @@ const Sidebar: React.FC<SidebarProps> = ({ tasks }) => {
             variant: "ghost",
             to: "/dashboard",
           },
-          {
-            title: "Вхід",
-            label: "342",
-            icon: LogIn,
-            variant: "ghost",
-            to: "/login",
-          },
-          {
-            title: "Повідомлення",
-            label: "128",
-            icon: AtSign,
-            variant: "ghost",
-            to: "/messages",
-          },
-          //   {
-          //     title: "Shopping",
-          //     label: "8",
-          //     icon: ShoppingCart,
-          //     variant: "ghost",
-          //   },
-          //   {
-          //     title: "Promotions",
-          //     label: "21",
-          //     icon: Archive,
-          //     variant: "ghost",
-          //   },
         ]}
       />
     </div>

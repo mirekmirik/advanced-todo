@@ -38,8 +38,13 @@ const TaskInput: React.FC<TaskFormProps> = ({
         />
         <div className="absolute top-2 right-3">
           <div className="flex gap-2">
-            <DatePicker onChange={(date) => setDate(date)}>
-              <CalendarDays />
+            <DatePicker onChange={(date) => setDate(date)} date={date}>
+              <CalendarDays
+                className={cn(
+                  "hover:text-purple-500 cursor-pointer transition-300 transition",
+                  date ? "text-purple-500" : ""
+                )}
+              />
             </DatePicker>
             <Tags
               onClick={() => setShowInputTags?.((prev) => !prev)}

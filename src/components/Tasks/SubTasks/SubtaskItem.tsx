@@ -10,8 +10,10 @@ import { toast } from "@/components/ui/use-toast";
 import { TasksActionType } from "@/hooks/useTasks";
 import { cn } from "@/lib/utils";
 import { statusesTask } from "@/mock/statuses";
+import { useContextOutlet } from "@/routes/Root";
 import { Subtask } from "@/types/tasks";
-import { Trash } from "lucide-react";
+import { useMediaQuery } from "@react-hook/media-query";
+import { Ban, CheckCheck, StickyNote, Trash } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 
 interface SubtaskItemProps extends TasksActionType {
@@ -19,67 +21,54 @@ interface SubtaskItemProps extends TasksActionType {
   parentTaskId?: number;
 }
 
-const SubtaskItem: React.FC<SubtaskItemProps> = ({
-  subtask,
-  onChangeStatusTask,
-  parentTaskId,
-  onRemoveTask,
-  onUpLevelTask,
-  onChangeTagsTask,
-  onChangeTitleTask,
-}) => {
-  const [title, setTitle] = useState(subtask.title);
-  const [tags, setTags] = useState(subtask.tags);
-  const [tag, setTag] = useState("");
-
-  const [showInputTag, setShowInputTag] = useState(false);
+const SubtaskItem: React.FC<SubtaskItemProps> = ({ subtask, parentTaskId }) => {
+  const {
+    tasks: { onChangeStatusTask, onUpLevelTask, onRemoveTask },
+  } = useContextOutlet();
   const [showUpdateForm, setShowUpdateForm] = useState(false);
-
   const [initialTask, setInitialTask] = useState(false);
+  const isMobile = useMediaQuery("(max-width: 560px)");
+
+  const onUpdateSubmit = () => {
+    setShowUpdateForm(false);
+  };
 
   useEffect(() => {
     setInitialTask(true);
   }, []);
 
-  const onUpdateSubmit = () => {
-    if (!title.trim())
-      return toast({
-        variant: "destructive",
-        title: "Будь-ласка, заповніть назву",
-      });
-    onChangeTagsTask?.(subtask.id, [...tags, tag], parentTaskId);
-    onChangeTitleTask?.(subtask.id, title, parentTaskId);
-    toast({
-      variant: "success",
-      title: "Успішно змінено!",
-    });
-    setShowUpdateForm(false);
-  };
-
   const statusName = useMemo(() => {
     const style =
       subtask.status === "completed"
         ? "text-green-500"
-        : subtask.status === "cancelled"
+        : status === "cancelled"
         ? "text-red-500"
-        : subtask.status === "in_progress"
+        : status === "in_progress"
         ? "text-green-300"
         : "";
+    const updatedStatus =
+      subtask.status === "completed" ? (
+        <CheckCheck />
+      ) : subtask.status === "cancelled" ? (
+        <Ban />
+      ) : (
+        <StickyNote />
+      );
 
     return (
       <div
         className={cn(
-          "min-w-32 border-r-4 flex items-center border-red-400 h-full",
-          style
+          "min-w-32 flex items-center  border-red-400 h-full",
+          style,
+          isMobile && "min-w-8"
         )}
       >
-        {statusesTask.find((status) => status.value === subtask.status)?.label}
+        {updatedStatus}
       </div>
     );
-  }, [subtask.status]);
+  }, [subtask.status, isMobile]);
 
   return (
-    // <div className="flex flex-col gap-3">
     <div className="flex items-center gap-3">
       <Card
         className={cn(
@@ -87,19 +76,8 @@ const SubtaskItem: React.FC<SubtaskItemProps> = ({
           initialTask ? "show-animate-block" : "hidden-animate-block"
         )}
       >
-        <div className="flex flex-col gap-3 flex-1">
+        {/* <div className="flex flex-col gap-3 flex-1">
           <div className="flex items-center gap-5 py-2 flex-1">
-            <div
-              className="hover:text-red-500 cursor-pointer"
-              onClick={(e) => e.stopPropagation()}
-            >
-              {/* onRemoveTask(task.id) */}
-              <AlertDialogComponent
-                onSubmit={() => onRemoveTask?.(subtask.id, parentTaskId)}
-              >
-                <Trash size={20} />
-              </AlertDialogComponent>
-            </div>
             {statusName}
             <Checkbox
               id="terms"
@@ -109,6 +87,7 @@ const SubtaskItem: React.FC<SubtaskItemProps> = ({
                 onChangeStatusTask?.(subtask.id, "completed", parentTaskId)
               }
             />
+
             <div
               className={cn(
                 "flex flex-row items-center gap-2 justify-start text-left flex-1",
@@ -119,9 +98,6 @@ const SubtaskItem: React.FC<SubtaskItemProps> = ({
             >
               <div className="flex flex-col gap-1">
                 <Label htmlFor="terms">{subtask.title}</Label>
-                <p className="text-sm text-muted-foreground">
-                  {subtask.description}
-                </p>
               </div>
               <div className="flex flex-wrap gap-2 h-full">
                 {subtask.tags.map((tag, i) => (
@@ -129,6 +105,88 @@ const SubtaskItem: React.FC<SubtaskItemProps> = ({
                 ))}
               </div>
             </div>
+
+            <div className="flex">
+              <div
+                className="hover:text-red-500 cursor-pointer"
+                onClick={(e) => e.stopPropagation()}
+              >
+                <AlertDialogComponent
+                  onSubmit={() => onRemoveTask?.(subtask.id, parentTaskId)}
+                >
+                  <Trash size={20} />
+                </AlertDialogComponent>
+              </div>
+              <DropdownTaskAction
+                onChangeStatusTask={onChangeStatusTask}
+                task={subtask}
+                parentTaskId={parentTaskId}
+                onUpLevelTask={onUpLevelTask}
+              />
+            </div>
+          </div>
+
+          {showUpdateForm && (
+            <TaskUpdateForm
+              task={subtask}
+              parentTaskId={parentTaskId}
+              onSubmit={onUpdateSubmit}
+            />
+          )}
+        </div> */}
+
+        <div className={cn("flex flex-1", isMobile ? "flex-col" : null)}>
+          <div className="flex items-center max-sm:gap-2 gap-5 py-2 flex-1">
+            {statusName}
+            <Checkbox
+              id="terms"
+              checked={subtask.status === "completed"}
+              disabled={subtask.status === "cancelled"}
+              onClick={() => onChangeStatusTask?.(subtask.id, "completed", parentTaskId)}
+            />
+            <div
+              className={cn(
+                "flex flex-row items-center gap-2 text-left flex-1 justify-between",
+                subtask.status === "completed"
+                  ? "line-through font-extrabold"
+                  : ""
+              )}
+            >
+              <div className="flex flex-col gap-1">
+                <Label htmlFor="terms" className="max-sm:text-xs text-balance">
+                  {subtask.title}
+                </Label>
+              </div>
+              <div className="flex flex-wrap gap-2 h-full ">
+                {subtask.tags.map((tag, i) => (
+                  <Badge key={i} className="max-sm:text-xs">
+                    {tag}
+                  </Badge>
+                ))}
+              </div>
+            </div>
+          </div>
+          {/* <div>{formatDate(createdAt)}</div> */}
+
+          <div
+            className="flex items-center max-sm:gap-2 gap-5 justify-end"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div
+              className="hover:text-red-500 cursor-pointer"
+              onClick={(e) => e.stopPropagation()}
+            >
+              <AlertDialogComponent onSubmit={() => onRemoveTask?.(subtask.id, parentTaskId)}>
+                <Trash size={20} />
+              </AlertDialogComponent>
+            </div>
+            {/* <StarIcon
+              onClick={() => onToggleImportantTask?.(task.id)}
+              className={cn(
+                "hover:text-yellow-500 transition transition-300 cursor-pointer",
+                task.isImportant ? "text-yellow-500" : ""
+              )}
+            /> */}
             <DropdownTaskAction
               onChangeStatusTask={onChangeStatusTask}
               task={subtask}
@@ -136,47 +194,13 @@ const SubtaskItem: React.FC<SubtaskItemProps> = ({
               onUpLevelTask={onUpLevelTask}
             />
           </div>
-          {showUpdateForm && (
-            <TaskUpdateForm
-              onTagChange={setTag}
-              onSubmit={onUpdateSubmit}
-              valueTitle={title}
-              onTagsChange={(tags) => setTags(tags)}
-              onTitleChange={(title) => setTitle(title)}
-              showInputTag={showInputTag}
-              isShowInputTags={showInputTag}
-              tags={tags}
-              valueTag={tag}
-              setShowInputTags={setShowInputTag}
-            />
-          )}
         </div>
       </Card>
       <Button onClick={() => setShowUpdateForm((prev) => !prev)}>
         Редагувати
       </Button>
     </div>
-    // </div>
   );
 };
 
 export default SubtaskItem;
-
-//  <Card className="py-2 px-1 flex flex-row items-center gap-3 flex-1"
-// id="terms"
-// checked={subtask.status === "completed"}
-// disabled={subtask.status === "cancelled"}
-// onClick={() =>
-//   onChangeStatusTask(subtask.id, "completed", parentTaskId)
-// }
-// >
-// <p className={cn(subtask.status === "completed" ? "line-through" : "")}>
-// {subtask.title}
-// </p>
-// <div className="flex flex-wrap gap-2 h-full">
-// {subtask.tags.map((tag, i) => (
-//   <Badge key={i}>{tag}</Badge>
-// ))}
-// </div>
-// <DropdownTaskAction onChangeStatusTask={onChangeStatusTask} parentTaskId={parentTaskId} task={subtask} /> */}
-// <Card/>

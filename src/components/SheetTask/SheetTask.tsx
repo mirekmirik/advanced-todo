@@ -20,7 +20,8 @@ import NoteInput from "./NoteInput";
 import { Button } from "../ui/button";
 import TaskUpdateForm from "../TaskUpdateForm/TaskUpdateForm";
 import { TasksActionType } from "@/hooks/useTasks";
-import { toast } from "../ui/use-toast";
+import { useContextOutlet } from "@/routes/Root";
+import { ScrollArea } from "../ui/scroll-area";
 
 interface SheetTaskProps extends TasksActionType {
   task: Task;
@@ -34,28 +35,18 @@ export function SheetTask({
   open,
   setOpen,
   setPickedTask,
-  onChangeStatusTask,
-  onRemoveTask,
-  onAddDueCalendar,
-  onAddTask,
-  onToggleImportantTask,
-  onUpLevelTask,
-  onAddNote,
-  onChangeTagsTask,
-  onChangeTitleTask,
 }: SheetTaskProps) {
   const onClose = () => {
     setOpen(false);
     setPickedTask(null);
   };
 
-  const [date, setDate] = useState<Date | undefined>(task.dueDate);
-  const [title, setTitle] = useState(task.title);
-  const [tags, setTags] = useState(task.tags);
-  const [tag, setTag] = useState("");
-  const [noteInput, setNoteInput] = useState(task.note);
+  const {
+    tasks: { onAddDueCalendar, onAddTask, onAddNote, onRemoveTask },
+  } = useContextOutlet();
 
-  const [showInputTag, setShowInputTag] = useState(false);
+  const [date, setDate] = useState<Date | undefined>(task.dueDate);
+  const [noteInput, setNoteInput] = useState(task.note);
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [firstRender, setFirstRender] = useState(false);
   const [openNote, setOpenNote] = useState(false);
@@ -71,24 +62,6 @@ export function SheetTask({
     setFocused(false);
     const savedNoteInput = noteInput.trim();
     onAddNote?.(task.id, savedNoteInput);
-  };
-
-  const onSubmitUpdate = () => {
-    if (!title.trim())
-      return toast({
-        variant: "destructive",
-        title: "Ви повинні заповнити назву",
-      });
-    const updatedTags = [...tags, tag];
-    onChangeTagsTask?.(task.id, updatedTags);
-    onChangeTitleTask?.(task.id, title);
-    setTags(updatedTags);
-    toast({
-      variant: "success",
-      title: "Успішно змінено",
-    });
-    setShowUpdateForm(false);
-    setShowInputTag(false);
   };
 
   useEffect(() => {
@@ -107,7 +80,7 @@ export function SheetTask({
 
   return (
     <Sheet open={open} onOpenChange={onClose}>
-      <SheetContent className="flex flex-col gap-2 sm:max-w-[64rem]">
+      <SheetContent className="flex flex-col gap-2 max-sm:p-1 max-sm:w-full sm:max-w-[64rem]">
         <SheetHeader>
           <SheetTitle>Подробиці задачі №{task?.id}</SheetTitle>
           <SheetDescription>
@@ -116,42 +89,23 @@ export function SheetTask({
         </SheetHeader>
         <div className="flex-grow flex flex-col gap-3 overflow-y-hidden">
           <Card className="flex flex-col  gap-5 px-2 py-4 flex-1 overflow-y-hidden">
-            <div className="flex flex-row items-center gap-3">
-              <TaskItem
-                onToggleImportantTask={onToggleImportantTask}
-                task={task}
-                onChangeStatusTask={onChangeStatusTask}
-                onRemoveTask={onRemoveTask}
-              />
+            <div className="flex flex-row items-center gap-3 flex-wrap">
+              <TaskItem task={task} />
               <Button onClick={() => setShowUpdateForm((prev) => !prev)}>
                 Редагувати
               </Button>
             </div>
             {showUpdateForm && (
               <TaskUpdateForm
-                isShowInputTags={showInputTag}
-                onTagChange={(tag) => setTag(tag)}
-                onTagsChange={setTags}
-                onTitleChange={(title) => setTitle(title)}
-                showInputTag={showInputTag}
-                tags={tags}
-                valueTag={tag}
-                valueTitle={title}
-                setShowInputTags={setShowInputTag}
-                onSubmit={onSubmitUpdate}
+                task={task}
+                onSubmit={() => setShowUpdateForm(false)}
               />
             )}
             <p>Підзадачі</p>
             <div className="flex-grow overflow-y-hidden">
-              <Subtasks
-                subtasks={task.subtasks}
-                onChangeStatusTask={onChangeStatusTask}
-                parentTaskId={task.id}
-                onRemoveTask={onRemoveTask}
-                onUpLevelTask={onUpLevelTask}
-                onChangeTitleTask={onChangeTitleTask}
-                onChangeTagsTask={onChangeTagsTask}
-              />
+              <ScrollArea className="rounded-md h-full">
+                <Subtasks subtasks={task.subtasks} parentTaskId={task.id} />
+              </ScrollArea>
             </div>
             <TaskForm onAddTask={onAddTask} taskId={task.id} />
           </Card>
@@ -205,7 +159,12 @@ export function SheetTask({
               Створено {formatDate(task.createdAt)}
             </h1>
             <div className="hover:text-red-500 cursor-pointer">
-              <AlertDialogComponent onSubmit={() => onRemoveTask?.(task.id)}>
+              <AlertDialogComponent
+                onSubmit={() => {
+                  onRemoveTask?.(task.id);
+                  setOpen(false);
+                }}
+              >
                 <Trash size={20} />
               </AlertDialogComponent>
             </div>

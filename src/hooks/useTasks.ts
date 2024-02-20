@@ -27,10 +27,31 @@ export type TasksActionType = {
     parentTaskId?: number
   ) => void;
 };
+const onAddToLocalStorage = (tasks: Task[]) => {
+  // const lsTasks = localStorage.getItem("tasks");
+  // const parsedTasks = JSON.parse(lsTasks)
+
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+};
+
+const onRemoveItemFromLocalStorage = () => {
+  // const localStorageTasks = onGetTaskLocalStorageItems()
+  localStorage.removeItem("tasks");
+};
+
+export const onGetTaskLocalStorageItems = () => {
+  const localStorageItems = localStorage.getItem("tasks");
+  if (!localStorageItems) return [];
+  return JSON.parse(localStorageItems) as Task[];
+};
 
 export const useTasks = () => {
-  const [tasks, setTasks] = useState<Task[]>(todos);
+  const [tasks, setTasks] = useState<Task[]>([
+    // ...todos,
+    ...onGetTaskLocalStorageItems(),
+  ]);
   const { toast } = useToast();
+
   const onChangeStatusTask = (
     taskId: number,
     type: TaskStatus,
@@ -43,16 +64,16 @@ export const useTasks = () => {
       const findIndexOfSubtask =
         foundParent?.subtasks.findIndex((subtask) => subtask.id === taskId) ||
         0;
-      console.log(findIndexOfSubtask);
       if (findIndexOfSubtask >= 0) {
         const pickedTask = foundParent?.subtasks[findIndexOfSubtask];
-        console.log(pickedTask);
         if (pickedTask) {
           if (pickedTask.status === "completed") {
             pickedTask.status = "new";
           } else {
             pickedTask.status = type;
+            pickedTask.completedAt = new Date();
           }
+          onAddToLocalStorage(copyTasks);
           setTasks(copyTasks);
         }
       }
@@ -67,23 +88,31 @@ export const useTasks = () => {
         pickedTask.status = "new";
       } else {
         pickedTask.status = type;
+        if (type === "completed") {
+          pickedTask.completedAt = new Date();
+        }
       }
+      onAddToLocalStorage(copyTasks);
+
       setTasks(copyTasks);
     }
   };
 
   const onAddTask = (task: Task | Subtask, parentTaskId?: number) => {
     // if subtasks
+    const copyTasks = [...tasks];
     if (parentTaskId) {
       const findTaskIdx = tasks.findIndex((task) => task.id === parentTaskId);
       if (findTaskIdx >= 0) {
-        const copyTasks = [...tasks];
         copyTasks[findTaskIdx].subtasks.push({ ...task, taskId: parentTaskId });
-        return setTasks(copyTasks);
+        setTasks(copyTasks);
+        return onAddToLocalStorage(copyTasks);
       }
     }
     // if task
-    setTasks((prev) => [...prev, task as Task]);
+    const newItems = [...copyTasks, task as Task];
+    setTasks(newItems);
+    onAddToLocalStorage(newItems);
     toast({
       title: "Ви додали нове завдання!",
       variant: "success",
@@ -98,17 +127,13 @@ export const useTasks = () => {
         (task) => task.id === parentTaskId
       );
       if (foundParentTask) {
-        console.log("parentTask", foundParentTask);
         const foundSubtaskIdx = foundParentTask.subtasks.findIndex(
           (subtask) => subtask.id === taskId
         );
         if (foundSubtaskIdx >= 0) {
-          console.log(
-            "foundSubtask",
-            foundParentTask.subtasks[foundSubtaskIdx]
-          );
           foundParentTask.subtasks.splice(foundSubtaskIdx, 1);
           setTasks(copyTasks);
+          onAddToLocalStorage(copyTasks);
           toast({
             variant: "default",
             title: "Ви видалили завдання!",
@@ -120,6 +145,7 @@ export const useTasks = () => {
       if (foundTaskIdx >= 0) {
         copyTasks.splice(foundTaskIdx, 1);
         setTasks(copyTasks);
+        onAddToLocalStorage(copyTasks);
       }
       toast({
         variant: "default",
@@ -134,6 +160,8 @@ export const useTasks = () => {
     if (foundTask) {
       foundTask.dueDate = date;
       setTasks(copyTasks);
+      onAddToLocalStorage(copyTasks);
+
       toast({
         variant: "default",
         title: `Новий дедлайн для задачі №${foundTask?.id}`,
@@ -148,6 +176,7 @@ export const useTasks = () => {
       foundTask.isImportant = !foundTask.isImportant;
     }
     setTasks(copyTasks);
+    onAddToLocalStorage(copyTasks);
   };
 
   const onUpLevelTask = (taskId: number, parentTaskId: number) => {
@@ -165,6 +194,7 @@ export const useTasks = () => {
         foundTask.subtasks = updatedTasks;
         copyTasks.push(turnedIntoTask);
         setTasks(copyTasks);
+        onAddToLocalStorage(copyTasks);
       }
     }
   };
@@ -179,7 +209,8 @@ export const useTasks = () => {
           variant: "success",
           title: "Опис успішно збережен",
         });
-        console.log(foundTask);
+        setTasks(updatedTasks);
+        onAddToLocalStorage(updatedTasks);
       }
     }
   };
@@ -220,6 +251,7 @@ export const useTasks = () => {
       }
     }
     setTasks(updatedTasks);
+    onAddToLocalStorage(tasks);
   };
 
   const onChangeTagsTask = (
@@ -247,6 +279,7 @@ export const useTasks = () => {
       }
     }
     setTasks(updatedTasks);
+    onAddToLocalStorage(updatedTasks);
   };
 
   return {
@@ -260,6 +293,6 @@ export const useTasks = () => {
     onAddNote,
     onChangeTitleTask,
     onChangeTagsTask,
-    onFindTask
+    onFindTask,
   };
 };

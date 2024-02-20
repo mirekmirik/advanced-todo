@@ -1,54 +1,65 @@
-import { Dispatch, SetStateAction } from "react";
+import { useState } from "react";
 import TaskInput from "../TaskForm/TaskInput";
 import TaskInputTags from "../TaskForm/TaskInputTags";
 import { Button } from "../ui/button";
+import { Subtask, Task } from "@/types/tasks";
+import { useContextOutlet } from "@/routes/Root";
+import { toast } from "../ui/use-toast";
+
+
 
 interface TaskUpdateFormProps {
-  onTitleChange: (title: any) => void;
-  setShowInputTags?: Dispatch<SetStateAction<boolean>>;
-  valueTitle: string | number;
-  isShowInputTags: boolean;
-  onTagsChange: (tags: any) => void;
-  tags: string[];
-  onTagChange: (tag: any) => void;
-  valueTag: string;
-  showInputTag: boolean;
-  onSubmit: () => void;
+  parentTaskId?: number;
+  task: Task | Subtask;
+  onSubmit?: () => void;
 }
 
 const TaskUpdateForm: React.FC<TaskUpdateFormProps> = ({
-  isShowInputTags,
-  onTagChange,
-  onTagsChange,
-  onTitleChange,
-  tags,
-  valueTag,
-  valueTitle,
-  setShowInputTags,
-  showInputTag,
+  task,
+  parentTaskId,
   onSubmit,
 }) => {
-  const onSubmitValues = () => {
-    onSubmit();
+  const [title, setTitle] = useState(task.title);
+  const [tags, setTags] = useState(task.tags);
+  const [tag, setTag] = useState("");
+  const {
+    tasks: { onChangeTagsTask, onChangeTitleTask },
+  } = useContextOutlet();
+
+  const [showInputTag, setShowInputTag] = useState(false);
+
+  const onUpdateSubmit = () => {
+    if (!title.trim())
+      return toast({
+        variant: "destructive",
+        title: "Будь-ласка, заповніть назву",
+      });
+    onChangeTagsTask?.(task.id, [...tags, tag], parentTaskId);
+    onChangeTitleTask?.(task.id, title, parentTaskId);
+    toast({
+      variant: "success",
+      title: "Успішно змінено!",
+    });
+    onSubmit?.();
   };
 
   return (
     <div className="flex flex-col gap-3">
       <TaskInput
-        isShowInputTags={isShowInputTags}
-        onTitleChange={(title) => onTitleChange(title)}
-        value={valueTitle}
-        setShowInputTags={setShowInputTags}
+        isShowInputTags={showInputTag}
+        onTitleChange={(title) => setTitle(title)}
+        value={title}
+        setShowInputTags={setShowInputTag}
       />
       {showInputTag && (
         <TaskInputTags
-          value={valueTag}
+          value={tag}
           tags={tags}
-          onTagChange={(tag) => onTagChange(tag)}
-          onTagsChange={(tags) => onTagsChange(tags)}
+          onTagChange={(tag) => setTag(tag)}
+          onTagsChange={(tags) => setTags(tags)}
         />
       )}
-      <Button onClick={onSubmitValues}>Підтвердити</Button>
+      <Button onClick={onUpdateSubmit}>Підтвердити</Button>
     </div>
   );
 };

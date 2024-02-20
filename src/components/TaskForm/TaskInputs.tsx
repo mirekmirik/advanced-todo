@@ -30,15 +30,14 @@ const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask, taskId }) => {
       assignedTo: null,
       cancelledDate: null,
       createdAt: new Date(),
-      description: null,
-      dueDate: undefined,
+      dueDate,
       id: Math.random(),
       priority: null,
       status: "new",
       isImportant: false,
       tags: tag ? [...tags, ...tag.split(",")] : tags,
       title,
-      updatedAt: null,
+      completedAt: null,
       subtasks: [],
       note: "",
     };
@@ -49,7 +48,6 @@ const TaskInputs: React.FC<TaskInputsProps> = ({ onAddTask, taskId }) => {
     setTag("");
     setTags([]);
   };
-
 
   return (
     <div className="gap-2 flex flex-col">

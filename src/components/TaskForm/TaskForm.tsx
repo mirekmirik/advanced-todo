@@ -1,14 +1,17 @@
 import { Task } from "@/types/tasks";
 import TaskInputs from "./TaskInputs";
 import { TasksActionType, useTasks } from "@/hooks/useTasks";
+import { useOutletContext } from "react-router-dom";
+import { useContextOutlet } from "@/routes/Root";
 
 interface TaskFormProps extends TasksActionType {
-  onAddTask: (task: Task, parentTaskId?: number) => void;
   taskId?: number;
 }
 
-const TaskForm: React.FC<TaskFormProps> = ({ onAddTask, taskId }) => {
-  const { tasks, onAddDueCalendar, onFindTask } = useTasks();
+const TaskForm: React.FC<TaskFormProps> = ({ taskId }) => {
+  const {
+    tasks: { onAddTask },
+  } = useContextOutlet();
 
   return (
     <div className="flex flex-col gap-2 border p-3">

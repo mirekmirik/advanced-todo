@@ -1,4 +1,4 @@
-import { Task, TaskStatus } from "@/types/tasks";
+import { Task } from "@/types/tasks";
 import TaskItem from "./TaskItem";
 import { useState } from "react";
 import { SheetTask } from "../SheetTask/SheetTask";
@@ -8,18 +8,7 @@ interface TaskListProps extends TasksActionType {
   tasks: Task[];
 }
 
-const TaskList: React.FC<TaskListProps> = ({
-  tasks,
-  onChangeStatusTask,
-  onRemoveTask,
-  onAddDueCalendar,
-  onAddTask,
-  onToggleImportantTask,
-  onUpLevelTask,
-  onAddNote,
-  onChangeTagsTask,
-  onChangeTitleTask,
-}) => {
+const TaskList: React.FC<TaskListProps> = ({ tasks }) => {
   const [pickedTask, setPickedTask] = useState<Task | null>(null);
   const [open, setOpen] = useState(false);
 
@@ -39,9 +28,6 @@ const TaskList: React.FC<TaskListProps> = ({
           pickedTask={pickedTask}
           key={task.id}
           task={task}
-          onChangeStatusTask={onChangeStatusTask}
-          onRemoveTask={onRemoveTask}
-          onToggleImportantTask={onToggleImportantTask}
         />
       ))}
       {pickedTask && (
@@ -50,15 +36,6 @@ const TaskList: React.FC<TaskListProps> = ({
           setPickedTask={setPickedTask}
           open={open}
           setOpen={setOpen}
-          onChangeStatusTask={onChangeStatusTask}
-          onRemoveTask={onRemoveTask}
-          onAddDueCalendar={onAddDueCalendar}
-          onAddTask={onAddTask}
-          onToggleImportantTask={onToggleImportantTask}
-          onUpLevelTask={onUpLevelTask}
-          onAddNote={onAddNote}
-          onChangeTagsTask={onChangeTagsTask}
-          onChangeTitleTask={onChangeTitleTask}
         />
       )}
     </div>

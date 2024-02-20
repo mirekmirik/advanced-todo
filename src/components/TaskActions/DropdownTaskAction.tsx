@@ -12,28 +12,27 @@ import {
 import { statusesTask } from "@/mock/statuses";
 import { Subtask, Task, TaskStatus } from "@/types/tasks";
 import { TasksActionType } from "@/hooks/useTasks";
+import { useContextOutlet } from "@/routes/Root";
 
 interface DropdownTaskActionProps extends TasksActionType {
   task: Task | Subtask;
-  // onChangeStatusTask: (
-  //   taskId: number,
-  //   type: TaskStatus,
-  //   parentTaskId?: number
-  // ) => void;
   parentTaskId?: number;
-  // onUpLevelTask?: (taskId: number, parentTaskId: number) => void;
 }
 
 const DropdownTaskAction: React.FC<DropdownTaskActionProps> = ({
-  onChangeStatusTask,
   task,
   parentTaskId,
-  onUpLevelTask,
 }) => {
+  const {
+    tasks: { onChangeStatusTask, onUpLevelTask },
+  } = useContextOutlet();
+
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="outline">...</Button>
+        <Button variant="outline" className="max-sm:w-[15px] max-sm:h-[30px]">
+          ...
+        </Button>
       </DropdownMenuTrigger>
       <DropdownMenuContent className="w-56">
         <DropdownMenuLabel>Змінити статус на:</DropdownMenuLabel>
