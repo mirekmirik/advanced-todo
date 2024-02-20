@@ -7,7 +7,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Root from "./routes/Root.tsx";
 import { ThemeProvider } from "./components/Theme/theme-provider.tsx";
 import TasksPage from "./routes/TasksPage.tsx";
-import Dashboard from "./components/Dashboard/Dashboard.tsx";
 import DashboardPage from "./routes/DashboardPage.tsx";
 
 const router = createBrowserRouter([
@@ -16,7 +15,7 @@ const router = createBrowserRouter([
     element: <Root />,
     children: [
       {
-        path: "/", // Добавьте этот путь
+        path: "/", 
         element: <TasksPage />,
       },
       {
@@ -27,18 +26,6 @@ const router = createBrowserRouter([
         path: "/dashboard",
         element: <DashboardPage />,
       },
-      // {
-      //   path: "/tasks/my-day",
-      //   element: <TasksPage />,
-      // },
-      // {
-      //   path: "/tasks/important",
-      //   element: <TasksPage />,
-      // },
-      // {
-      //   path: "/tasks/planned",
-      //   element: <TasksPage />,
-      // },
     ],
   },
 ]);

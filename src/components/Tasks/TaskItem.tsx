@@ -4,8 +4,6 @@ import { Label } from "../ui/label";
 import { Checkbox } from "../ui/checkbox";
 import { cn } from "@/lib/utils";
 import {
-  MouseEvent,
-  MouseEventHandler,
   useEffect,
   useMemo,
   useState,

@@ -17,8 +17,7 @@ export const DatePicker: React.FC<DatePickerProps> = ({
   date,
   onChange,
 }) => {
-  //   const [date, setDate] = React.useState<Date>();
-
+  
   return (
     <Popover>
       <PopoverTrigger asChild>

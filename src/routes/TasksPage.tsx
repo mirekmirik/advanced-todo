@@ -22,9 +22,13 @@ const TasksPage = () => {
         <Filters />
       </div>
       <div className="flex-grow overflow-y-auto max-sm:px-3 px-4">
-        <ScrollArea className="rounded-md h-full flex-1">
-          <Tasks tasks={tasks} status={statusTask} />
-        </ScrollArea>
+        {!tasks.length ? (
+          <p>Ще немає завдань, створіть завдання</p>
+        ) : (
+          <ScrollArea className="rounded-md h-full flex-1">
+            <Tasks tasks={tasks} status={statusTask} />
+          </ScrollArea>
+        )}
       </div>
       <TaskForm />
     </div>

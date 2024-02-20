@@ -1,6 +1,5 @@
 import { useToast } from "@/components/ui/use-toast";
 import { turnIntoTask } from "@/helpers/from-subtask-to-task";
-import { todos } from "@/mock/todos";
 import { Subtask, Task, TaskStatus } from "@/types/tasks";
 import { useState } from "react";
 
@@ -28,15 +27,7 @@ export type TasksActionType = {
   ) => void;
 };
 const onAddToLocalStorage = (tasks: Task[]) => {
-  // const lsTasks = localStorage.getItem("tasks");
-  // const parsedTasks = JSON.parse(lsTasks)
-
   localStorage.setItem("tasks", JSON.stringify(tasks));
-};
-
-const onRemoveItemFromLocalStorage = () => {
-  // const localStorageTasks = onGetTaskLocalStorageItems()
-  localStorage.removeItem("tasks");
 };
 
 export const onGetTaskLocalStorageItems = () => {
@@ -46,10 +37,7 @@ export const onGetTaskLocalStorageItems = () => {
 };
 
 export const useTasks = () => {
-  const [tasks, setTasks] = useState<Task[]>([
-    // ...todos,
-    ...onGetTaskLocalStorageItems(),
-  ]);
+  const [tasks, setTasks] = useState<Task[]>(onGetTaskLocalStorageItems());
   const { toast } = useToast();
 
   const onChangeStatusTask = (

@@ -1,9 +1,6 @@
 import {
-  MutableRefObject,
   forwardRef,
   useEffect,
-  useRef,
-  useState,
 } from "react";
 import { Textarea } from "../ui/textarea";
 import React from "react";
@@ -19,9 +16,7 @@ interface NoteInputProps {
 
 const NoteInput = forwardRef<HTMLTextAreaElement, NoteInputProps>(
   (props, ref) => {
-    // Use useEffect here if you want additional control over focus, similar to Form.tsx
     useEffect(() => {
-      // Assert that `ref` is a MutableRefObject
       if (!props.autoFocus) {
         return;
       }
