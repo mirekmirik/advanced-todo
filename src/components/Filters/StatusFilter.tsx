@@ -31,6 +31,7 @@ export function StatusFilter() {
     statusesTabs.find((status) => status.value === statusTask) ||
       statusesTabs[0]
   );
+  // @ts-ignore
   const [searchParams, setSearchParams] = useSearchParams();
 
   const onChangeStatus = (status: Status | null) => {

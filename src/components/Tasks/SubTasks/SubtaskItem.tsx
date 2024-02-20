@@ -22,6 +22,8 @@ const SubtaskItem: React.FC<SubtaskItemProps> = ({ subtask, parentTaskId }) => {
   const {
     tasks: { onChangeStatusTask, onUpLevelTask, onRemoveTask },
   } = useContextOutlet();
+  
+  // @ts-ignore
   const [showUpdateForm, setShowUpdateForm] = useState(false);
   const [initialTask, setInitialTask] = useState(false);
   const isMobile = useMediaQuery("(max-width: 560px)");
